@@ -235,18 +235,10 @@ def eventform_backend(id):
 
         return redirect(url_for('dashboard', id=id))
 
-        # Create and add the event to the database
-    #     new_event = Event(date=event_date, time=event_time, event=event_name, user=user)
-    #     db.session.add(new_event)
-    #     db.session.commit()
-
-    #     flash('Event created successfully!')
-    #     return redirect(url_for('dashboard', id=id))
-
     return render_template('event_form.html', user_id=id)
 
 
-@app.route('/get_events/<user_id>')
+@app.route('/get_events/<user_id>', methods=['GET'])
 def get_events(user_id):
     events = Event.query.filter_by(user_id=user_id).all()
     event_list = []
@@ -255,9 +247,9 @@ def get_events(user_id):
         event_list.append({
             'title': event.event,
             'start': event.timeStart,
-            # 'end': event.timeEnd,
+            'end': event.timeEnd,
             'url': event.url,
-            # 'color': event.color,
+            'color': event.color,
         })
 
     return jsonify(event_list)
@@ -285,13 +277,16 @@ def open_convo(id, convo_id):
 
 @app.route('/dashboard/messages/<id>/<convo_id>/reply', methods=['GET', 'POST'])
 def reply(id, convo_id):
-    user = User.query.get(id)
-    body = request.form.get('reply')
-    new_msg = Message(body=body, sender_id=id, recipient_id=convo_id)
-    db.session.add(new_msg)
-    db.session.commit()
+    if request.method == 'POST':
+        reply_text = request.form.get('reply')
+        # print(id, convo_id)
+        convo_user = User.query.filter_by(email=convo_id).first()
 
-    return redirect(url_for("open_convo", id=user.id, convo_id=convo_id))
+        new_msg = Message(body=reply_text, sender_id=id, recipient_id=convo_user.id)
+        db.session.add(new_msg)
+        db.session.commit()
+
+        return redirect(url_for("open_convo", id=id, convo_id=convo_id))
 
 
 # Routes for sending and viewing messages

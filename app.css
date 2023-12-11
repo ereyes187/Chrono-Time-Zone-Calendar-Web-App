@@ -131,6 +131,58 @@ input[type=text].dark
     font-family: 'Philosopher', sans-serif;
 }
 
+input[type=date]
+{
+    background: rgba(29,29,29,255);
+    border:none;
+    padding: 18px;
+    color: white;
+    margin-top: 10px; 
+    margin-bottom: 25px; 
+    width: 26%;
+    font-size: 16px;
+    border-radius: 15px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+input[type=time]
+{
+    background: rgba(29,29,29,255);
+    border:none;
+    padding: 18px;
+    color: white;
+    margin-top: 10px; 
+    margin-bottom: 25px; 
+    width: 26%;
+    font-size: 16px;
+    border-radius: 15px;
+    font-family: 'Philosopher', sans-serif;
+}
+
+input[type=date]::-webkit-calendar-picker-indicator
+{
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator
+{
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+select
+{
+    background: rgba(29,29,29,255);
+    border:none;
+    padding: 18px;
+    color: white;
+    margin-top: 15px; 
+    margin-bottom: 25px; 
+    width: 35%;
+    font-size: 16px;
+    border-radius: 15px;
+    font-family: 'Philosopher', sans-serif;
+}
+
 button
 {
     background: rgba(29,29,29,255);
@@ -170,12 +222,18 @@ nav a
     display: inline-block; /* Ensures the anchor takes up the full width */
 }
 
+nav a.active 
+{
+    text-shadow: 1px 1px 15px #fff, 1px 1px 15px #ccc;
+}
+
 nav a:hover 
 {
-    background-color: rgba(35,33,36,255);
-    color: rgb(152, 152, 152);
+    background-color: rgba(35,33,36);
+    color: rgb(191, 191, 191);
     display: inline-block; /* Ensures the link takes up the full height */
     height: 100%;   /* Extends the link to the top and bottom of the nav */
+    text-shadow: none;
 }
 
 nav a.split
@@ -257,6 +315,7 @@ nav a.split:hover
 
 .column 
 {
+    overflow-y: auto;
     width: 50%;
     flex: 1; 
 }
@@ -331,6 +390,12 @@ textarea.reply
     margin: 0;
 }
 
+.tab p
+{
+    font-size: 18px;
+    text-indent: 8%;
+}
+
 .tab button:hover
 {
     background: rgba(23,23,23,255);
@@ -347,4 +412,35 @@ textarea.reply
     width: 70%;
     margin-left: auto;
     margin-right: auto;
+}
+
+.container {
+    padding-left: 200px;
+    padding-right: 200px;
+    width: auto;
+    max-width: auto; /* Ensure the wrapper doesn't exceed the viewport width */
+}
+
+
+.container_dash {
+  display: flex;
+  width: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: auto;
+  align-items: center;
+}
+
+.left-content_dash,
+.right-content_dash {
+  flex: 1;
+/*  padding: 20px;*/
+  /* Adjust styles for your content */
+}
+
+.divider_dash {
+  width: 1px;
+  background-color: #ccc; /* Divider color */
+  height: auto; /* Adjust the height as needed */
+/*  margin: 0 10px; /* Adjust the margin for spacing */*/
 }

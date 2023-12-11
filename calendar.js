@@ -1,11 +1,43 @@
 document.addEventListener('DOMContentLoaded', function() {
+  var initialTimeZone = 'America/Los_Angeles';
   var calendarEl = document.getElementById('calendar');
   var timezoneSelectorEl = document.getElementById('timezone-selector');
 
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    timeZone: 'America/Los_Angeles', //defaults to LA time
+    initialView: 'dayGridMonth',
+    dayMaxEvents: true, // allow "more" link when too many events
+    selectable: true,
+    navLinks: true, // can click day/week names to navigate views
+    // eventTimeFormat: { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' },
+
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+    },
+
+    // events: /get_events/+user_id,
+      // events: [
+      //   {
+      //     title: 'BCH237',
+      //     start: '2023-12-12T10:30:00',
+      //     end: '2023-12-12T11:30:00',
+      //     extendedProps: {
+      //       department: 'BioChemistry'
+      //     },
+      //     description: 'Lecture'
+      //   }
+        // more events ...
+      // ],
+
+  });
+  calendar.render();
+ 
   // Timezones for selector
   var timezones = [
-    { value: 'America/New_York', text: 'New York' },
     { value: 'America/Los_Angeles', text: 'Los Angeles' },
+    { value: 'America/New_York', text: 'New York' },
     { value: 'Asia/Karachi', text: 'Karachi' },
     { value: 'Asia/Tokyo', text: 'Tokyo' },
     { value: 'Europe/Helsinki', text: 'Helsinki' },
@@ -19,35 +51,51 @@ document.addEventListener('DOMContentLoaded', function() {
     timezoneSelectorEl.appendChild(optionEl);
   });
 
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    timeZone: 'America/Los_Angeles', //defaults to LA time
-    initialView: 'dayGridMonth',
-    dayMaxEvents: true, // allow "more" link when too many events
-    // selectable: true,
-    // navLinks: true, // can click day/week names to navigate views
-    // eventTimeFormat: { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' },
+  function refetchEvents() {
+    fetch('/get_events/' + user_id)
+      .then(response => response.json())
+      .then(events => {
+        calendar.removeAllEvents();
+        calendar.addEventSource(events);
+        calendar.rerenderEvents();
+      });
+  }
+  
+  
+  // Initially fetch and render events 
+  refetchEvents();
 
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
-    },
+  // Re-fetch events on some trigger
+  document.addEventListener('someTrigger', refetchEvents);
 
-    events: '/get_events/' + user_id,
+  // fetch('/get_events/1')
+  //   .then((response) => response.json())
+  //   .then((timeZones) => {
+  //     timeZones.forEach(function(timeZone) {
+  //       var optionEl;
 
-  });
-  console.log('/get_events'+user_id)
-
-  calendar.render();
+  //       if (timeZone !== 'UTC') { // UTC is already in the list
+  //         optionEl = document.createElement('option');
+  //         optionEl.value = timeZone;
+  //         optionEl.innerText = timeZone;
+  //         timezoneSelectorEl.appendChild(optionEl);
+  //       }
+  //     });
+  //   });
 
   // When selector changes, update timezone
   timezoneSelectorEl.addEventListener('change', function() {
     calendar.setOption('timeZone', this.value);
 
-    // Rerender after timezone change
-    calendar.render();
+    // calendar.render();
   });
+
+
 });
+
+
+
+
 // commented out test events:
     // events: [
     //   {

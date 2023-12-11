@@ -11,16 +11,19 @@
     <script src="https://kit.fontawesome.com/182976f003.js" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='messages.js') }}"></script>
 </head>
-<body style="background: rgba(14,14,14,255);" class="body2">
+<body style="background: rgba(14,14,14,255);">
 
     <nav>
-        <a href="{{ url_for('dashboard', id=user_id) }}">Back to Dashboard</a>
+        <a href="{{ url_for('dashboard', id=user_id) }}">Home</a>
+        <a href="{{ url_for('eventform', id=user_id) }}">Event Form</a>
         <a href="{{ url_for('calendar', id=user_id) }}">Calendar</a>
+        <a class="active" href="{{ url_for('messages', id=user_id) }}">Messages</a>
         <a class="split">Chrono</a>
     </nav>
 <div class="content-wrapper">
     <div class="view-open-chats">
         <div class="tab">
+            <p class="title">Open Conversations</p>
             {% set unique_emails = [] %}
             {% set all_messages = received_messages + sent_messages %}
             {% for message in all_messages %}
@@ -42,7 +45,7 @@
 <div class="messages-wrapper">
     <div class="view-messages">
     <div class="convo-user">
-        <p>Open a conversation</p>
+        <p>No Conversation Is Open</p>
     </div>
     </div>
 

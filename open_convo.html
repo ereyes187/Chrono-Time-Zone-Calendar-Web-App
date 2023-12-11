@@ -14,8 +14,10 @@
 <body style="background: rgba(14,14,14,255);" class="body2">
 
     <nav>
-        <a href="{{ url_for('dashboard', id=user_id) }}">Back to Dashboard</a>
+        <a href="{{ url_for('dashboard', id=user_id) }}">Home</a>
+        <a href="{{ url_for('eventform', id=user_id) }}">Event Form</a>
         <a href="{{ url_for('calendar', id=user_id) }}">Calendar</a>
+        <a class="active" href="{{ url_for('messages', id=user_id) }}">Messages</a>
         <a class="split">Chrono</a>
     </nav>
 <div class="content-wrapper">
@@ -59,7 +61,7 @@
             {% endif %}
         {% endfor %}
         <!-- SHOULD REPLY ON ENTER -->
-        <form id="sendMessageForm" data-user-id="{{ user_id }}" data-convo-id="{{ convo_id }}">
+        <form id="sendMessageForm" action="{{url_for('reply',id=user_id, convo_id=convo_id)}}" method="POST">
             <textarea class="reply" id="reply" name="reply" placeholder="Enter to reply..." required></textarea>
         </form>
     </div>
@@ -85,4 +87,23 @@
 </div>
 </div>
 </body>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#reply').on('keydown', function(event) {
+            // Check if the Enter key is pressed
+            if (event.keyCode === 13) {
+                event.preventDefault(); // Prevent the default action (new line in the textarea)
+
+                // Trigger form submission
+                $('#sendMessageForm').submit();
+            }
+        });
+    });
+</script>
+
+
 </html>
+

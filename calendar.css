@@ -1,0 +1,38 @@
+.fc-header-toolbar{
+    color: red;
+}
+.fc-prev-button, .fc-next-button, .fc-today-button{
+    color: red !important;
+}
+
+.fc-month-button
+{
+    color: red !important;
+}
+
+.fc-basicWeek-button
+{
+    color: red !important;
+}
+
+.fc-dayGridMonth-button
+{
+    color: red !important;
+}
+
+.fc-timeGridWeek-button
+{
+    color: red !important;
+}
+
+.fc-timeGridDay-button
+{
+    color: red !important;
+
+}
+
+.fc-listMonth-button
+{
+    color: red !important;
+
+}

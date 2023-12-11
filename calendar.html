@@ -1,43 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav { 
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            padding: 14px 16px;
-            display: inline-block;
-        }
-
-        nav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-        .container {
-            padding-left: 200px;
-            padding-right: 200px;
-            width: auto;
-            max-width: auto; /* Ensure the wrapper doesn't exceed the viewport width */
-        }
-    </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendar </title>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/app.css">
+
+    <link rel="stylesheet" href="/static/calendar.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:wght@300&family=Cinzel&family=IM+Fell+French+Canon+SC&family=Julius+Sans+One&family=Marcellus&family=Marcellus+SC&family=Philosopher&family=Poiret+One&display=swap" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.40/builds/moment-timezone-with-data.min.js"></script>
@@ -56,16 +33,15 @@
   </script>
 
 </head>
-<body>
+<body style="background: rgba(14,14,14,255); color: white; overflow: auto;">
 
-    <nav>
-        <a href="{{ url_for('dashboard', id=user_id) }}">Home</a>
-        <a href="{{ url_for('eventform', id=user_id) }}">Event Form</a>
-        <a href="{{ url_for('messages', id=user_id) }}">Messages</a>
-    </nav>
-
-    <!-- Your content goes here -->
-    <p>Calender page<p>
+  <nav>
+    <a href="{{ url_for('dashboard', id=user_id) }}">Home</a>
+    <a href="{{ url_for('eventform', id=user_id) }}">Event Form</a>
+    <a class="active" href="{{ url_for('calendar', id=user_id) }}">Calendar</a>
+    <a href="{{ url_for('messages', id=user_id) }}">Messages</a>
+    <a class="split">Chrono</a>
+</nav>
 
     <div class="container">
       <select id='timezone-selector'></select>

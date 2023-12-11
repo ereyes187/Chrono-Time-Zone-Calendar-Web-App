@@ -1,46 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Website</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+    <link rel="stylesheet" href="/static/app.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:wght@300&family=Cinzel&family=IM+Fell+French+Canon+SC&family=Julius+Sans+One&family=Marcellus&family=Marcellus+SC&family=Philosopher&family=Poiret+One&display=swap" rel="stylesheet">
 
-        nav {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
 
-        nav a {
-            color: white;
-            text-decoration: none;
-            padding: 14px 16px;
-            display: inline-block;
-        }
 
-        nav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.40/builds/moment-timezone-with-data.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/moment-timezone@6.1.10/index.global.min.js"></script>
+
+
+    <link rel="stylesheet" href="/static/dash.css">
+
 </head>
-<body>
+<body style="background: rgba(14,14,14,255); color: white;">
 
     <nav>
-        <a href="{{ url_for('calendar', id=user_id) }}">Calendar</a>
+        <a class="active" href="{{ url_for('dashboard', id=user_id) }}">Home</a>
         <a href="{{ url_for('eventform', id=user_id) }}">Event Form</a>
+        <a href="{{ url_for('calendar', id=user_id) }}">Calendar</a>
         <a href="{{ url_for('messages', id=user_id) }}">Messages</a>
+        <a class="split">Chrono</a>
     </nav>
 
-    <!-- Your content goes here -->
-    <p>Dashboard page<p>
-
 </body>
+    <!-- Your content goes here -->
+
+    <div class="container_dash">
+      <div class="left-content_dash">
+        <!-- Content on the left -->
+        <p>Left Content Here</p>
+      </div>
+      <div class="divider_dash"></div>
+
+      <div class="right-content_dash">
+        <!-- Content on the right -->
+        <script src="{{ url_for('static', filename='todo.js') }}"></script>
+            <select id='timezone-selector'></select>
+
+            <div id='calendar'></div>
+
+      </div>
+    </div>
+
+<script> 
+    var user_id = {{user_id}};
+</script>
+
+
 </html>
