@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:wght@300&family=Cinzel&family=IM+Fell+French+Canon+SC&family=Julius+Sans+One&family=Marcellus&family=Marcellus+SC&family=Philosopher&family=Poiret+One&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/182976f003.js" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='messages.js') }}"></script>
 </head>
 <body style="background: rgba(14,14,14,255);">
 
@@ -24,7 +23,6 @@
 <div class="content-wrapper">
     <div class="view-open-chats">
         <div class="tab">
-            <p class="title">Open Conversations</p>
             {% set unique_emails = [] %}
             {% set all_messages = received_messages + sent_messages %}
             {% for message in all_messages %}
