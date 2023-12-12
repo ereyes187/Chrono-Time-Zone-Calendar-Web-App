@@ -14,6 +14,7 @@
         <a class="active" href="{{ url_for('eventform', id=user_id) }}">Event Form</a>
         <a href="{{ url_for('calendar', id=user_id) }}">Calendar</a>
         <a href="{{ url_for('messages', id=user_id) }}">Messages</a>
+        <a href="{{ url_for('logout') }}">Log Out</a>
         <a class="split">Chrono</a>
     </nav>
     
@@ -56,6 +57,9 @@
         <input class="dark" type="time" id="event_end_time" name="event_end_time" ><br><br>
         <p>If Event Is All Day, Leave End Time Blank. </p>
 
+        <!-- <input type="checkbox" id="checkButton" style="size: 25px; padding-left: 10px; width: 20px; height: 20px;">
+        <label for="checkButton">&#10003; All Day event?</label><br><br>
+ -->
         <button type="submit">Create Event</button>
     </div>
     </form>

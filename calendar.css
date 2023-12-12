@@ -1,11 +1,25 @@
-.fc-header-toolbar{
-    color: red;
+.fc-header-toolbar
+{
+    color: rgb(255, 255, 255) !important;
+    font-family: 'Philosopher', sans-serif !important;
 }
 .fc-prev-button, .fc-next-button, .fc-today-button{
-    color: red !important;
+    background: rgba(29,29,29) !important;
+    border:none !important;
+    padding: 18px !important;
+    color: white !important;
+    width: 35% !important;
+    font-size: 16px !important;
+    color: rgb(255, 255, 255) !important;
+    font-family: 'Philosopher', sans-serif !important;
 }
 
-.fc-month-button
+.fc-prev-button:hover, .fc-next-button:hover, .fc-today-button:hover
+{
+    background: rgba(21,21,21,255) !important;
+}
+
+/* .fc-month-button
 {
     color: red !important;
 }
@@ -13,26 +27,52 @@
 .fc-basicWeek-button
 {
     color: red !important;
+} */
+
+.fc-dayGridMonth-button, .fc-timeGridWeek-button, .fc-timeGridDay-button, .fc-listMonth-button
+{
+    background: rgba(29,29,29) !important;
+    border:none !important;
+    padding: 18px !important;
+    color: white !important;
+    width: 35% !important;
+    font-size: 16px !important;
+    color: rgb(255, 255, 255) !important;
+    font-family: 'Philosopher', sans-serif !important;
 }
 
-.fc-dayGridMonth-button
+.fc-dayGridMonth-button:hover, .fc-timeGridWeek-button:hover, .fc-timeGridDay-button:hover
 {
-    color: red !important;
+    background: rgba(21,21,21,255) !important;
 }
 
-.fc-timeGridWeek-button
+/* .fc-daygrid-event
 {
-    color: red !important;
+    background-color: black !important;
+} */
+
+/* .fc-event ,.fc-event-start ,.fc-event-end ,.fc-daygrid-event ,.fc-daygrid-dot-event
+{
+    background-color: black !important;
+    color: #ffffff !important;
+} */
+
+
+/* .fc-view-harness
+{
+    background-color: #1a1919 !important;
 }
 
-.fc-timeGridDay-button
-{
-    color: red !important;
+.fc-page-bg-color{
+    background-color: #1D1D1D !important;
+}  */
 
+.fc-day
+{
+    background: rgba(29,29,29) !important;
 }
 
-.fc-listMonth-button
+th
 {
-    color: red !important;
-
+    background-color: rgba(21,21,21) !important;
 }

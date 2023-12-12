@@ -18,8 +18,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/moment-timezone@6.1.10/index.global.min.js"></script>
 
 
-    <link rel="stylesheet" href="/static/dash.css">
-
 </head>
 <body style="background: rgba(14,14,14,255); color: white;">
 
@@ -28,10 +26,10 @@
         <a href="{{ url_for('eventform', id=user_id) }}">Event Form</a>
         <a href="{{ url_for('calendar', id=user_id) }}">Calendar</a>
         <a href="{{ url_for('messages', id=user_id) }}">Messages</a>
+        <a href="{{ url_for('logout') }}">Log Out</a>
         <a class="split">Chrono</a>
     </nav>
 
-</body>
     <!-- Your content goes here -->
 
     <div class="container_dash">
@@ -46,6 +44,7 @@
         <script src="{{ url_for('static', filename='todo.js') }}"></script>
             <select id='timezone-selector'></select>
 
+            <br></br>
             <div id='calendar'></div>
 
       </div>

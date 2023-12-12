@@ -1,16 +1,15 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash, session, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
-from flask_admin import Admin
+from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from sqlalchemy import CheckConstraint
 from wtforms import SelectMultipleField
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
 
 from datetime import datetime
 import pytz
-
 
 #flask --app app run   use this to run app
 # http://127.0.0.1:5000/ # link to webaddress
@@ -20,19 +19,38 @@ app = Flask(__name__, static_url_path='/static')
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///example.sqlite"
 app.config["SECRET_KEY"] = "mysecret"
 db = SQLAlchemy(app)
-admin = Admin(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    check = session.get('role', None)
+    print(check, "this is check")
+    if check == 'admin':
+        print('admin query')
+        return AdminLogin.query.get(int(user_id))
+    else:
+        print('user query')
+        return User.query.get(int(user_id))
+
 
 app.app_context().push() # without this, I recieve flask error
 
 
 # databases
 
-class AdminLogin(db.Model):
+class AdminLogin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(30), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)\
+    password = db.Column(db.String(128), nullable=False)
 
-class User(db.Model):
+    def get_id(self):
+        return str(self.id)
+
+
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(30), unique=True, nullable=False)
@@ -45,6 +63,14 @@ class User(db.Model):
     @property
     def is_active(self):
         # For simplicity, always consider the teacher account as active
+        return True
+
+    def get_id(self):
+        return str(self.id)
+
+    @property
+    def is_authenticated(self):
+        # Replace with your authentication logic
         return True
 
 class Event(db.Model):
@@ -77,6 +103,8 @@ class UserView(ModelView):
     #}
 
 class AdminLoginView(ModelView):
+    # def is_accessible(self):
+        # return current_user.is_authenticated
     pass
 
 class EventView(ModelView):
@@ -95,6 +123,29 @@ class MessageView(ModelView):
     #form_args = {
     #    'body': {
     #}
+
+from flask import current_app
+
+class MyAdminIndexView(AdminIndexView):
+    @expose('/')
+    def index(self):   #changing index to another name breaks admin permission access
+        
+        role = session.get('role', None)
+
+        if current_user.is_authenticated:
+
+            if role == 'admin':
+                # Print the session role before redirecting
+                return super(MyAdminIndexView, self).index()
+            else:
+                flash('You do not have permission to access this page.')
+                return redirect(url_for('login'))
+
+        else:
+            flash('You have to login.')
+            return redirect(url_for('login'))
+
+admin = Admin(app, index_view=MyAdminIndexView())
  
 
 admin.add_view(UserView(User, db.session))
@@ -129,12 +180,10 @@ def register_backend():
     existing_user = User.query.filter_by(email=email).first()
 
     if existing_user:
-        flash('Email address already exists:')
-        return redirect(url_for("register"))
-        #return jsonify({"error": "User with this email already exists"}), 400
+        flash('Email is already registered, login:', 'login')
+        return redirect(url_for("login"))
 
     hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-    # new_user = User(email=email, password=hashed_password)
 
     new_user = User(name = name, email=email, password=hashed_password)
 
@@ -151,7 +200,10 @@ def login_backend():
     Email = request.form['email']
     Password = request.form['password']
 
-    user = User.query.filter_by(email=Email).first()
+    if Email.endswith('@admin'):
+        user = AdminLogin.query.filter_by(email=Email).first()
+    else:
+        user = User.query.filter_by(email=Email).first()
 
     # Check if the email ends with "@type" and assign role at login
     if user is not None:
@@ -165,30 +217,76 @@ def login_backend():
 
         if check_password_hash(user.password, Password):
 
-            session['id'] = user.id
+            if Email.endswith('@admin'):
+                session['role'] = 'admin'
+                login_user(user, remember=True)
+
+                return redirect(url_for('admin.index'))
+
+            else:
+                session['role'] = 'student'
+                session['id'] = user.id
+
+                print(current_user)
+                print(user.id)
+
+                login_user(user, remember=True)
+
 
             return redirect(url_for('dashboard', id = user.id))
 
         else:
             flash('Password is incorrect: try again')
             return redirect(url_for("login"))
-            #return jsonify({"error": "Password is not correct"}), 404
+
     else:
         flash('Email not found or invalid login credentials')
         return redirect(url_for("login"))
-        #return jsonify({"error": "Invalid request: Email not found or invalid login credentials"}), 404
 
 
 @app.route('/dashboard/<id>')
+@login_required
 def dashboard(id):
+    # print(type(id), type(current_user.id) ) //id is a string, has to be passed as int() to work
+    if current_user.id != int(id):
+        abort(403)
+
+    # check = session.get('id', None)
+
+    # if id != check:
+    #     flash('You do not have access to this page.')
+    #     return abort(403) # Abort the request with a 403 Forbidden error
+
     return render_template('dashboard.html', user_id=id)
 
+
 @app.route('/dashboard/calendar/<id>')
+@login_required
 def calendar(id):
+    if current_user.id != int(id):
+        abort(403)
+
+    # check = session.get('id', None)
+
+    # if id != check:
+    #     flash('You do not have access to this page.')
+    #     return abort(403) # Abort the request with a 403 Forbidden error
+
     return render_template('calendar.html', user_id=id)
 
+
 @app.route('/dashboard/eventform/<id>')
+@login_required
 def eventform(id):
+    if current_user.id != int(id):
+        abort(403)
+
+    # check = session.get('id', None)
+
+    # if id != check:
+    #     flash('You do not have access to this page.')
+    #     return abort(403) # Abort the request with a 403 Forbidden error
+
     return render_template('event_form.html', user_id=id)
 
 
@@ -223,7 +321,7 @@ def eventform_backend(id):
 
         # print(timeStart, timeEnd)
 
-        if event_end_date == None:
+        if event_end_time == None:
             allday = 'yes'
         else:
             allday = 'no'
@@ -250,15 +348,48 @@ def get_events(user_id):
             'end': event.timeEnd,
             'url': event.url,
             'color': event.color,
+            'allDay' : event.allday,
         })
 
     return jsonify(event_list)
 
 
+@app.route('/get_display/<id>', methods=['GET'])
+def get_display(id):
+    events = Event.query.filter_by(user_id=id).all()
+
+    events_data = [{'id': event.id, 'name': event.event} for event in events]
+    return jsonify({'events': events_data})
+
+
+@app.route('/delete_event/<int:event_id>', methods=['POST'])
+def delete_event(event_id):
+    event = Event.query.get(event_id)
+
+    if event:
+        db.session.delete(event)
+        db.session.commit()
+
+        flash('event deleted successfully')
+        return jsonify({'message': 'Event deleted successfully'})
+    else:
+        return jsonify({'message': 'Event not found'}), 404
+
 
 
 @app.route('/dashboard/messages/<id>')
+@login_required
 def messages(id):
+    if current_user.id != int(id):
+        abort(403)
+
+    # check = session.get('id', None)
+
+    # if id != check:
+    #     flash('You do not have access to this page.')
+    #     return abort(403) # Abort the request with a 403 Forbidden error
+
+
     user = User.query.get(id)
     sent_messages = Message.query.filter_by(sender_id=id).all()
     received_messages = Message.query.filter_by(recipient_id=id).all()
@@ -268,7 +399,17 @@ def messages(id):
 
 
 @app.route('/dashboard/messages/<id>/<convo_id>', methods=['GET', 'POST'])
+@login_required
 def open_convo(id, convo_id):
+    if current_user.id != int(id):
+        abort(403)
+
+    # check = session.get('id', None)
+
+    # if id != check:
+    #     flash('You do not have access to this page.')
+    #     return abort(403) # Abort the request with a 403 Forbidden error
+
     user = User.query.get(id)
     sent_messages = Message.query.filter_by(sender_id=id).all()
     received_messages = Message.query.filter_by(recipient_id=id).all()
@@ -276,6 +417,7 @@ def open_convo(id, convo_id):
 
 
 @app.route('/dashboard/messages/<id>/<convo_id>/reply', methods=['GET', 'POST'])
+@login_required
 def reply(id, convo_id):
     if request.method == 'POST':
         reply_text = request.form.get('reply')
@@ -291,6 +433,7 @@ def reply(id, convo_id):
 
 # Routes for sending and viewing messages
 @app.route('/dashboard/messages/<id>/send_message', methods=['GET', 'POST'])
+@login_required
 def send_message(id):
     user = User.query.get(id)
     email = request.form.get('email')
@@ -311,6 +454,19 @@ def send_message(id):
     db.session.commit()
 
     return redirect(url_for("open_convo", id=user.id, convo_id=existing_user))
+
+
+
+@app.route('/logout')
+@login_required
+def logout():
+
+    logout_user()
+    session['id'] = None
+    session['role'] = None
+
+    flash('You have been successfully logged out.')
+    return redirect(url_for("login"))
 
 
 if __name__ == '__main__':

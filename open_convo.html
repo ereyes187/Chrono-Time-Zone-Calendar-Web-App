@@ -18,6 +18,7 @@
         <a href="{{ url_for('eventform', id=user_id) }}">Event Form</a>
         <a href="{{ url_for('calendar', id=user_id) }}">Calendar</a>
         <a class="active" href="{{ url_for('messages', id=user_id) }}">Messages</a>
+        <a href="{{ url_for('logout') }}">Log Out</a>
         <a class="split">Chrono</a>
     </nav>
 <div class="content-wrapper">
@@ -81,6 +82,15 @@
           <button type="submit">Send Message</button>
         </div>
     </form>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
     </div>
 
     

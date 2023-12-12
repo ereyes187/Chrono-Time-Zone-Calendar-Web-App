@@ -171,16 +171,19 @@ input[type="time"]::-webkit-calendar-picker-indicator
 
 select
 {
-    background: rgba(29,29,29,255);
-    border:none;
-    padding: 18px;
-    color: white;
-    margin-top: 15px; 
-    margin-bottom: 25px; 
-    width: 35%;
-    font-size: 16px;
-    border-radius: 15px;
-    font-family: 'Philosopher', sans-serif;
+    background: rgba(29,29,29) !important;
+    border:none !important;
+    padding: 18px !important;
+    color: white !important;
+    margin-top: 15px !important; 
+    margin-bottom: 25px !important; 
+    width: 35% !important;
+    font-size: 16px !important;
+    border-radius: 15px !important;
+    font-family: 'Philosopher', sans-serif !important;
+    appearance: none;
+    -webkit-appearance: none;
+
 }
 
 button
@@ -392,7 +395,7 @@ textarea.reply
 
 .tab p
 {
-    font-size: 18px;
+    font-size: 70%;
     text-indent: 8%;
 }
 
@@ -442,5 +445,20 @@ textarea.reply
   width: 1px;
   background-color: #ccc; /* Divider color */
   height: auto; /* Adjust the height as needed */
-/*  margin: 0 10px; /* Adjust the margin for spacing */*/
+/*  margin: 0 10px; /* Adjust the margin for spacing */
+}
+
+.fc-view-harness
+{
+    background-color: #1a1919 !important;
+}
+
+.flashes {
+    list-style: none;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ff0000; /* Red border */
+    background-color: #ffcccc; /* Light red background */
+    color: #ff0000; /* Red text color */
+    border-radius: 5px;
 }

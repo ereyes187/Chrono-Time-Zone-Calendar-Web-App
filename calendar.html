@@ -40,11 +40,26 @@
     <a href="{{ url_for('eventform', id=user_id) }}">Event Form</a>
     <a class="active" href="{{ url_for('calendar', id=user_id) }}">Calendar</a>
     <a href="{{ url_for('messages', id=user_id) }}">Messages</a>
+    <a href="{{ url_for('logout') }}">Log Out</a>
     <a class="split">Chrono</a>
 </nav>
 
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
     <div class="container">
       <select id='timezone-selector'></select>
+
+        <button onclick="deleteSelectedEvent()" style="width:80px; display: inline-block; float:right; padding:20px 15px;  margin-top:15px;">Delete</button>
+        <select id="eventDropdown" style="width: 250px !important; height: 60px; display: inline-block; float:right; padding: 20px 15px; margin-right: 15px;"></select>
+        <label for="eventDropdown" style="width: 80px !important; display: inline-block;  float:right; padding:15px 15px; ">Select Event:</label>
+
 
       <br></br>
 
@@ -53,4 +68,62 @@
 
 
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+        function populateDropdown(user_id) {
+            $.ajax({
+                url: '/get_display/' + user_id,
+                type: 'GET',
+                success: function(response) {
+                  console.log('Response from server:', response);
+                    var dropdown = document.getElementById('eventDropdown');
+
+                    // Clear previous options
+                    dropdown.innerHTML = '';
+
+                    // Populate dropdown with events
+                    response.events.forEach(function(event) {
+                        var option = document.createElement('option');
+                        option.value = event.id;
+                        option.text = event.name;
+                        dropdown.appendChild(option);
+                    });
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function deleteSelectedEvent() {
+            var selectedEventId = $('#eventDropdown').val();
+
+            if (!selectedEventId) {
+                alert('Please select an event to delete.');
+                return;
+            }
+
+            $.ajax({
+                url: '/delete_event/' + selectedEventId,
+                type: 'POST',
+                success: function(response) {
+                    console.log(response.message);
+                    // Refresh dropdown after deletion
+                    var user_id = 1; // Replace with the actual user ID
+                    populateDropdown(user_id);
+                    location.reload();
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        // Populate dropdown on page load
+        // var user_id = 1; // Replace with the actual user ID
+        populateDropdown(user_id);
+</script>
+
 </html>

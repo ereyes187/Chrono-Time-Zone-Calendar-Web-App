@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // eventTimeFormat: { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' },
 
     headerToolbar: {
-      center:'listWeek',
+      right: 'listWeek',
+      left: 'prev,next,today',
+      center:'title',
     }
 
   });

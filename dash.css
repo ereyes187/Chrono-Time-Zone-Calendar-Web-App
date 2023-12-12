@@ -1,44 +1,61 @@
 .fc-header-toolbar{
+	font-size: 80%;
 	height: 15px;
 	padding-bottom: 20px;
 	padding-top: 10px;
 }
 
-.fc-today-button{
+/* .fc-today-button{
 	height: auto;
-}
+	color: red !important;
+} */
 
-.fc-button-group{
+/* .fc-button-group{
 	height: auto;
-}
+	color: red !important;
+} */
 
 .fc-button{
-	width: 90px;
+    background: rgba(29,29,29) !important;
+    border:none !important;
+    padding: 14px !important;
+    color: rgb(255, 255, 255) !important;
+    font-family: 'Philosopher', sans-serif !important;
 }
 
-.fc-button-listWeek{
+.fc-button:hover
+{
+	background: rgba(21,21,21,255) !important;
+}
+
+/* .fc-button-listWeek{
 	width: 100px;
-}
+} */
 
-.fc-prev-button, .fc-next-button{
-	height: 45px;
-	width: auto;
-	padding-top: -10px;
-}
+/* .fc-prev-button, .fc-next-button{
+    background: rgba(29,29,29) !important;
+    border:none !important;
+    padding: 18px !important;
+    color: white !important;
+    width: 90px !important;
+    font-size: 16px !important;
+    color: rgb(255, 255, 255) !important;
+    font-family: 'Philosopher', sans-serif !important;
+} */
 
 
 /* Individual List Event */
 .fc-list-event { /* event sleves themselves */
 	color : black;
-
     border-bottom: 1px solid black; 
     padding: 10px; 
-    background-color: black;
+    background: rgba(29,29,29) !important;
 }
+
 
 /* List Event Title */
 .fc-list-event-title {
-  color: #3498db; /* event text color */
+  color: white; /* event text color */
 }
 
 /* List Event Time */
@@ -48,31 +65,58 @@
 
 
 .fc-listWeek-view { /*background of listview*/
-  background-color: #232323; /* Your desired background color */
+  background: rgba(21,21,21);
   border: 1px solid #ddd; /* Your desired border color */
 }
 
 .fc-day {
-	color: black;
-	background-color: white;
+	color: white;
+	background-color: black;
 }
 
 .fc-daygrid-day-events{
-	color:black;
+    color: rgb(255, 255, 255);  
 	size: 20px;
 }
 
-.fc-view-harness{ /* the highlighted day */
-	color: black;
-	background-color: #FFFCB9;
-}
+/* .fc-view-harness{ 
+	background-color: #fff200! important;
+} */
 
-.fc-col-header{
-	color: white;
-}
+/* .fc-col-header{
+    background: rgba(21,21,21,255);
+    color: rgb(231, 0, 0);  
+} */
 
-.fc-day-selected {
-  border: 2px solid red; /* Your desired border color */
+/* .fc-day-selected {
+  border: 2px solid red; 
   color: red;
-  background-color: green;
+  background-color: red !important;
+} */
+
+
+.fc-list-day-text, .fc-list-day-side-text, .fc-list-day-cushion, .fc-cell-shaded
+{
+	background: rgba(21,21,21)	!important;
+}
+
+.fc-list-day, .fc-day, .fc-day-tue, .fc-day-future
+{
+	background: rgba(21,21,21)	!important;
+}
+
+.fc-list-event-hover-bg-color
+{
+	background: red !important;
+}
+
+:root {
+	--fc-list-event-hover-bg-color: #070707 !important;
+	--fc-page-bg-color: #1D1D1D !important;
+}
+
+.element
+{
+	background-color: var(--fc-list-event-hover-bg-color);
+	background-color: var(--fc-page-bg-color);
 }
