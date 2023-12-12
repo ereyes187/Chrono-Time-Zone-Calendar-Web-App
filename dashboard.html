@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/app.css">
+    <link rel="stylesheet" href="/static/dash.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:wght@300&family=Cinzel&family=IM+Fell+French+Canon+SC&family=Julius+Sans+One&family=Marcellus&family=Marcellus+SC&family=Philosopher&family=Poiret+One&display=swap" rel="stylesheet">
@@ -32,14 +33,13 @@
 
     <!-- Your content goes here -->
 
-    <div class="container_dash">
+<!--     <div class="container_dash">
       <div class="left-content_dash">
-        <!-- Content on the left -->
         <p>Left Content Here</p>
       </div>
       <div class="divider_dash"></div>
 
-      <div class="right-content_dash">
+      <div class="right-content_dash"> -->
         <!-- Content on the right -->
         <script src="{{ url_for('static', filename='todo.js') }}"></script>
             <select id='timezone-selector'></select>
@@ -47,8 +47,8 @@
             <br></br>
             <div id='calendar'></div>
 
-      </div>
-    </div>
+<!--       </div>
+    </div> -->
 
 <script> 
     var user_id = {{user_id}};

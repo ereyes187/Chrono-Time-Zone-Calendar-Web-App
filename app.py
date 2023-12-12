@@ -8,7 +8,7 @@ from wtforms import SelectMultipleField
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 #flask --app app run   use this to run app
@@ -77,8 +77,8 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timeStart = db.Column(db.String(20), nullable=False)
     timeEnd = db.Column(db.String(20), nullable=False)
-    allday = db.Column(db.String(10), nullable=True )
-    event = db.Column(db.String(100), nullable=False)
+    allday = db.Column(db.Boolean, default=False )
+    event = db.Column(db.String(20), nullable=False)
     url = db.Column(db.String(100), nullable=True)
     color = db.Column(db.String(20), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -308,30 +308,95 @@ def eventform_backend(id):
         url = request.form['url']
         color = request.form['color']
 
-        print(event_name, event_start_date, event_start_time)
-        print(event_end_date, event_end_time)
-        print(url, color)
+        # Check if the checkbox is checked using request.form.get
+        is_all_day = request.form.get('checkButton') is not None
+
+        timezone = request.form['timezone']
+
+        start__ = datetime.strptime(f"{event_start_date} {event_start_time}", "%Y-%m-%d %H:%M")
+        end__ = datetime.strptime(f"{event_end_date} {event_end_time}", "%Y-%m-%d %H:%M")
+
+        if end__ < start__:
+            flash('End date cannot be before start date.')
+            print("Error: End date cannot be before the start date.")
+            return render_template('event_form.html', user_id=id)
+
+        print("inputed time: ",event_start_date, event_start_time)
+
+        if timezone == 'new_york':
+            # Convert the event_start_time to a datetime object
+            start_datetime = datetime.strptime(f"{event_start_date} {event_start_time}", "%Y-%m-%d %H:%M")
+            end_datetime = datetime.strptime(f"{event_end_date} {event_end_time}", "%Y-%m-%d %H:%M")
+
+            # Subtract 3 hours from the datetime objects
+            start_datetime -= timedelta(hours=3)
+            end_datetime -= timedelta(hours=3)
+
+            # Update event_start_date, event_start_time, and event_end_time with the modified values
+            event_start_date = start_datetime.strftime("%Y-%m-%d")
+            event_end_date = end_datetime.strftime("%Y-%m-%d")
+            event_start_time = start_datetime.strftime("%H:%M")
+            event_end_time = end_datetime.strftime("%H:%M")
+
+            print("modified time: ", event_start_date, event_start_time, event_end_date, event_end_time)
+
+        if timezone == 'tokyo':
+            # Convert the event_start_time to a datetime object
+            start_datetime = datetime.strptime(f"{event_start_date} {event_start_time}", "%Y-%m-%d %H:%M")
+            end_datetime = datetime.strptime(f"{event_end_date} {event_end_time}", "%Y-%m-%d %H:%M")
+
+            # Subtract 17 hours from the datetime objects
+            start_datetime -= timedelta(hours=17)
+            end_datetime -= timedelta(hours=17)
+
+            # Normalize the datetime objects to ensure they are in the correct range
+            start_datetime = start_datetime.replace(hour=int(start_datetime.strftime("%H")), minute=int(start_datetime.strftime("%M")))
+            end_datetime = end_datetime.replace(hour=int(end_datetime.strftime("%H")), minute=int(end_datetime.strftime("%M")))
+
+            # Update event_start_date, event_start_time, and event_end_time with the modified values
+            event_start_date = start_datetime.strftime("%Y-%m-%d")
+            event_end_date = end_datetime.strftime("%Y-%m-%d")
+            event_start_time = start_datetime.strftime("%H:%M")
+            event_end_time = end_datetime.strftime("%H:%M")
+
+            print("modified time: ", event_start_date, event_start_time, event_end_date, event_end_time)
+
+
+        # print(type(event_end_time), type(event_end_date))
+
+        # print(is_all_day)
+        # print(type(is_all_day)) # is a bool value
+
+        # print(event_name, event_start_date, event_start_time)
+        # print(event_end_date, event_end_time)
+        # print(url, color)
 
         timeStart = event_start_date + 'T' + event_start_time
 
-        if event_end_date == None and event_end_time == None:
+        if event_end_date != None and event_end_time != None :
             timeEnd = event_end_date + 'T' + event_end_time
+
+        elif event_end_date != None and event_end_time == None:
+            timeEnd = event_end_date
+
         else:
             timeEnd = ''
 
-        # print(timeStart, timeEnd)
+        print(timeStart)
+        print(timeEnd)
 
-        if event_end_time == None:
-            allday = 'yes'
-        else:
-            allday = 'no'
+
             
-        new_event = Event(timeStart=timeStart, timeEnd=timeEnd, allday=allday, event=event_name, url=url, color=color, user_id=id)
+        if is_all_day == False:
+            new_event = Event(timeStart=timeStart, timeEnd=timeEnd, event=event_name, url=url, color=color, user_id=id)
+        else:
+            new_event = Event(timeStart=timeStart, timeEnd=timeEnd, allday=is_all_day, event=event_name, url=url, color=color, user_id=id)
+        
         db.session.add(new_event)
         db.session.commit()
         flash('Event created successfully!')
 
-        return redirect(url_for('dashboard', id=id))
+        return redirect(url_for('calendar', id=id))
 
     return render_template('event_form.html', user_id=id)
 

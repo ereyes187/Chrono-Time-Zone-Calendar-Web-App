@@ -37,10 +37,14 @@ document.addEventListener('DOMContentLoaded', function() {
   // Timezones for selector
   var timezones = [
     { value: 'America/Los_Angeles', text: 'Los Angeles' },
+    { value: 'America/North_Dakota/Center', text: 'CST' },
     { value: 'America/New_York', text: 'New York' },
     { value: 'Asia/Karachi', text: 'Karachi' },
     { value: 'Asia/Tokyo', text: 'Tokyo' },
     { value: 'Europe/Helsinki', text: 'Helsinki' },
+    { value: 'Europe/Paris', text: 'Paris'},
+    { value: 'Europe/London', text: 'London'},
+    { value: 'America/Argentina/Buenos_Aires', text: 'Buenos Aires'}
   ];
 
   // Populate selector with options

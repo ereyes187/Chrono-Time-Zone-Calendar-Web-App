@@ -17,6 +17,15 @@
         <a href="{{ url_for('logout') }}">Log Out</a>
         <a class="split">Chrono</a>
     </nav>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
     
     <div class="send-messages">
     <form action="{{ url_for('eventform_backend', id=user_id) }}" method="post">
@@ -26,9 +35,10 @@
         <input class="dark" type="text" id="event_name" name="event_name" placeholder="Example: Coffee Break" required><br><br><br>
 <!-- ----------------------------------------------------------- -->
         <label for="url">Attach URL To Your Event (Optional):</label><br>
-        <input class="dark" type="text" id="url" name="url"><br><br><br>
+        <input class="dark" type="text" id="url" name="url" placeholder="🔗"><br><br><br>
+
 <!-- ----------------------------------------------------------- -->
-        <label for="color">Select Color:</label><br>
+        <label for="color">Select Color:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</label><label for="timezone">Select Timezone:</label><br>
           <select id="color" name="color">
             <option value="red">Red</option>
             <option value="blue">Blue</option>
@@ -38,11 +48,17 @@
             <option value="orange">Orange</option>
           </select>
     
-        <br>
+
+          <!-- <label for="timezone">Select Timezone:</label><br> -->
+          <select id="timezone" name="timezone">
+            <option value="los_angeles">Los Angeles</option>
+            <option value="new_york">New York</option>
+            <option value="tokyo">Tokyo</option>
+          </select>
     </div>
 
 <!-- ----------------------------------------------------------- -->
-    <div style="padding: 35px;" class="column"
+    <div style="padding: 35px;" class="column">
         <label for="event_start_date">Event Start Date:&emsp; &emsp; &emsp; &emsp; &ensp;</label>
         <label for="event_start_time">Event Start Time:</label><br>
         
@@ -53,13 +69,12 @@
 <!-- ----------------------------------------------------------- -->
         <label for="event_end_date">Event End Date:&emsp; &emsp; &emsp; &ensp; &ensp; &ensp;</label>
         <label for="event_end_time">Event End Time:</label><br>
-        <input class="dark" type="date" id="event_end_date" name="event_end_date" >
-        <input class="dark" type="time" id="event_end_time" name="event_end_time" ><br><br>
-        <p>If Event Is All Day, Leave End Time Blank. </p>
+        <input class="dark" type="date" id="event_end_date" name="event_end_date" required>
+        <input class="dark" type="time" id="event_end_time" name="event_end_time" required><br><br>
+        <!-- <p>If Event Is All Day, Leave End Time Blank. </p> -->
 
-        <!-- <input type="checkbox" id="checkButton" style="size: 25px; padding-left: 10px; width: 20px; height: 20px;">
+        <input type="checkbox"  name="checkButton" id="checkButton" style="size: 25px; padding-left: 10px; width: 20px; height: 20px;">
         <label for="checkButton">&#10003; All Day event?</label><br><br>
- -->
         <button type="submit">Create Event</button>
     </div>
     </form>
